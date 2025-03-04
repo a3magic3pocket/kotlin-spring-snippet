@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: snippet
+  datasource:
+    url: jdbc:h2:mem:testdb  # 메모리 내 데이터베이스
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
