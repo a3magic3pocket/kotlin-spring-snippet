@@ -12,4 +12,23 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      max-poll-records: 1000  # 한 번에 최대 1000개의 메시지 가져오기
+      fetch-min-bytes: 10000  # 최소 10KB의 데이터를 가져오기
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+#      # 스티키 리밸런싱을 활성화
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.StickyAssignor
+    listener:
+      ack-mode: manual
+
 

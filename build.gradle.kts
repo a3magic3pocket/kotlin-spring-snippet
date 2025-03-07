@@ -33,6 +33,13 @@ dependencies {
 
     // validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // kafka
+    implementation("org.springframework.kafka:spring-kafka")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // coroutine
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
 }
 
 kotlin {
