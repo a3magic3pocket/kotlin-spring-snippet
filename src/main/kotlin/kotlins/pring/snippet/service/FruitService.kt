@@ -56,9 +56,21 @@ class FruitService(
         return fruitRepository.save(fruit)
     }
 
-    @Transactional(readOnly = true)
-    fun listFruit() {
+    @Transactional(rollbackFor = [Exception::class])
+    fun updateFruit(fruitId: Long, fruitReqDto: FruitReqDto): Fruit {
+        val savedFruit = fruitRepository.findByIdOrNull(id = fruitId) ?: throw Exception(message = "not found")
 
+        savedFruit.origin = fruitReqDto.origin
+        savedFruit.name = fruitReqDto.name
+
+        return fruitRepository.save(savedFruit)
+    }
+
+    @Transactional(readOnly = true)
+    fun listFruit(): List<Fruit> {
+        val fruits = fruitRepository.findAll()
+
+        return fruits.toList()
     }
 
     @Transactional(readOnly = true)
