@@ -58,7 +58,7 @@ class FruitService(
 
     @Transactional(rollbackFor = [Exception::class])
     fun updateFruit(fruitId: Long, fruitReqDto: FruitReqDto): Fruit {
-        val savedFruit = fruitRepository.findByIdOrNull(id = fruitId) ?: throw Exception(message = "not found")
+        val savedFruit = fruitRepository.findByIdOrNull(id = fruitId) ?: throw Exception("not found")
 
         savedFruit.origin = fruitReqDto.origin
         savedFruit.name = fruitReqDto.name
