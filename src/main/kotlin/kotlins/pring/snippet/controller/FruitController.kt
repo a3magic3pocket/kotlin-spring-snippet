@@ -2,7 +2,9 @@ package kotlins.pring.snippet.controller
 
 import jakarta.validation.Valid
 import kotlins.pring.snippet.dto.*
+import kotlins.pring.snippet.entity.Fruit
 import kotlins.pring.snippet.service.FruitService
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -53,7 +55,7 @@ class FruitController(
     fun listFruitByName(
         @RequestParam(name = FRUIT_NAME) name: String,
     ): ResponseEntity<DataRes<List<FruitResDto>>> {
-        val savedFruits = fruitService.listFruitByName(
+        val savedFruits = fruitService.listFruitsByName(
             name = name
         )
 
@@ -172,8 +174,32 @@ class FruitController(
     }
 
     @GetMapping("")
-    fun listFruits() {
+    fun listFruits(
+    ) {
 
+    }
+
+    @GetMapping(value = [""], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun listFruitsPageableByOrigin(
+        @RequestParam(name = FRUIT_ORIGIN) origin: String,
+        pageable: Pageable,
+    ): ResponseEntity<DataPageableRes<Fruit>> {
+        val fruitPage = fruitService.listFruitsPageable(
+            origin = origin,
+            pageable = pageable
+        )
+
+        return ResponseEntity.ok().body(
+            DataPageableRes(
+                totalCount = fruitPage.totalElements,
+                data = fruitPage.content,
+                page = PageInfo(
+                    totalPages = fruitPage.totalPages,
+                    number = fruitPage.number,
+                    size = fruitPage.size
+                )
+            )
+        )
     }
 
     @PutMapping(value = ["/{$FRUIT_ID:[0-9]+}"], produces = [MediaType.APPLICATION_JSON_VALUE])
