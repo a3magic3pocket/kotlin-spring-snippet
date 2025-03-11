@@ -2,12 +2,20 @@ spring:
   application:
     name: snippet
   datasource:
-    url: jdbc:h2:mem:testdb  # 메모리 내 데이터베이스
+#    url: jdbc:h2:mem:testdb  # 메모리 내 데이터베이스
+    url: jdbc:h2:file:./data/testdb  # 파일 모드로 설정
     driverClassName: org.h2.Driver
     username: sa
     password: password
+    platform: h2
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update  # 자동 테이블 업데이트
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
   h2:
     console:
       enabled: true

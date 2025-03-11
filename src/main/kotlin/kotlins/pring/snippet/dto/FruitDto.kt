@@ -2,10 +2,13 @@ package kotlins.pring.snippet.dto
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.querydsl.core.annotations.QueryProjection
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
+import kotlins.pring.snippet.entity.Fruit
+import kotlins.pring.snippet.entity.FruitOrder
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class FruitReqDto(
@@ -46,4 +49,18 @@ data class FruitResDto(
     val id: Long,
     val name: String,
     val origin: String,
+)
+
+data class FruitOrderDto @QueryProjection constructor(
+    val fruit: Fruit,
+    val fruitOrder: FruitOrder,
+)
+
+data class FruitOrderLatestAndPreviousDiff @QueryProjection constructor(
+    val fruitId: Long,
+    val baseOrderId: Long,
+    val previousOrderId: Long,
+    val baseOrderQuantity: Int,
+    val previousOrderQuantity: Int,
+    val diff: Int,
 )

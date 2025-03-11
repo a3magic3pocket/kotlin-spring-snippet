@@ -1,9 +1,16 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
+    val kotlinVersion = "2.1.10"
+
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.jpa") version kotlinVersion
+
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "1.9.25"
+
+    // KSP 플러그인 추가
+    kotlin("kapt") version kotlinVersion
+    id("com.google.devtools.ksp") version "$kotlinVersion-1.0.31"
 }
 
 group = "kotlins.pring"
@@ -33,6 +40,13 @@ dependencies {
 
     // validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // querydsl
+    val querydslVersion = "6.10.1"
+    implementation("io.github.openfeign.querydsl:querydsl-jpa:$querydslVersion")
+    kapt("io.github.openfeign.querydsl:querydsl-apt:$querydslVersion")
+//    ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:$querydslVersion")
+    compileOnly("io.github.openfeign.querydsl:querydsl-apt:$querydslVersion:jpa")
 }
 
 kotlin {
