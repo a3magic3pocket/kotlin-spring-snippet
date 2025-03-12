@@ -2,8 +2,8 @@ spring:
   application:
     name: snippet
   datasource:
-#    url: jdbc:h2:mem:testdb  # 메모리 내 데이터베이스
-    url: jdbc:h2:file:./data/testdb  # 파일 모드로 설정
+#    url: jdbc:h2:mem:testdb;MODE=MySQL  # 메모리 내 데이터베이스
+    url: jdbc:h2:file:./data/testdb;MODE=MySQL  # 파일 모드로 설정
     driverClassName: org.h2.Driver
     username: sa
     password: password

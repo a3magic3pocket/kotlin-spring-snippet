@@ -64,3 +64,15 @@ data class FruitOrderLatestAndPreviousDiff @QueryProjection constructor(
     val previousOrderQuantity: Int,
     val diff: Int,
 )
+
+data class FruitOrderSummaryDto(
+    val id: Long,
+    val name: String,
+    val sumQuantities: Long,
+    val countOrders: Long,
+)
+
+data class FruitOrderSubqueryJoinDto(
+    val id: Long,
+    val fruitId: Long,
+)

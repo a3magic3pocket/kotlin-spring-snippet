@@ -3,6 +3,7 @@ package kotlins.pring.snippet.controller
 import jakarta.validation.Valid
 import kotlins.pring.snippet.dto.*
 import kotlins.pring.snippet.entity.Fruit
+import kotlins.pring.snippet.repository.FruitQuerydslRepository
 import kotlins.pring.snippet.service.FruitService
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/v1/fruits")
 class FruitController(
     private val fruitService: FruitService,
+    private val fruitQuerydslRepository: FruitQuerydslRepository
 ) {
     companion object {
         const val FRUIT_ID = "fruit_id"
@@ -210,6 +212,42 @@ class FruitController(
     @DeleteMapping(value = ["/{$FRUIT_ID:[0-9]+}"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun deleteFruit() {
 
+    }
+
+    @GetMapping(value = ["/expt"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun expt(
+    ): String {
+        // ex1
+//        fruitQuerydslRepository.getFruitsWithQuantity()
+
+        // ex2
+//        val pageable = PageRequest.of(2, 2)
+//        val result = fruitQuerydslRepository.getFruitsWithQuantityPageable(
+//            pageable = pageable
+//        )
+//        println("result++" + result)
+//        println("result++" + result.size)
+//        println("result++" + result.content)
+
+        // ex3
+//        fruitQuerydslRepository.getLatestAndPreviousOrderDiff()
+
+        // ex4
+//        val result = fruitQuerydslRepository.getFruitsOrderedByQuantity(
+//            quantity = 2
+//        )
+
+        // ex5
+//        val result = fruitQuerydslRepository.getFruitsWithOrderSummary()
+//        println("result++" + result)
+
+        // ex6
+        val result = fruitQuerydslRepository.joinByFruitName(
+            name = "바나나"
+        )
+        println("result++" + result)
+
+        return "Hello"
     }
 
 }
