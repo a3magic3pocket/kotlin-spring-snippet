@@ -205,8 +205,20 @@ class FruitController(
     }
 
     @PutMapping(value = ["/{$FRUIT_ID:[0-9]+}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun updateFruit() {
+    fun updateFruit(
+        @PathVariable(name = FRUIT_ID) fruitId: Long,
+        @RequestBody fruitReqDto: FruitReqDto
+    ): DataRes<String> {
+        fruitService.updateFruit(
+            UpdateReqDto(
+                id = fruitId,
+                data = fruitReqDto
+            )
+        )
 
+        return DataRes(
+            "success"
+        )
     }
 
     @DeleteMapping(value = ["/{$FRUIT_ID:[0-9]+}"], produces = [MediaType.APPLICATION_JSON_VALUE])

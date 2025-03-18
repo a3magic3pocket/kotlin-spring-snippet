@@ -1,5 +1,6 @@
 package kotlins.pring.snippet.service
 
+import kotlins.pring.snippet.config.exception.NotFoundException
 import kotlins.pring.snippet.dto.*
 import kotlins.pring.snippet.entity.Fruit
 import kotlins.pring.snippet.repository.FruitRepository
@@ -9,12 +10,12 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
-import java.time.LocalDateTime
 import java.time.ZonedDateTime
 
 @Service
 class FruitService(
-    private val fruitRepository: FruitRepository
+    private val fruitRepository: FruitRepository,
+    private val duplicateCheckService: DuplicateCheckService,
 ) {
     @Transactional(rollbackFor = [Exception::class])
     fun createFruit(fruitReqDto: FruitReqDto): Fruit {
@@ -70,18 +71,27 @@ class FruitService(
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    fun updateFruit(fruitUpdateDto: UpdateDto<FruitReqDto>): Fruit {
-        val savedFruit = fruitRepository.findByIdOrNull(id = fruitUpdateDto.id) ?: throw Exception("not found")
+    fun updateFruit(fruitUpdateReqDto: UpdateReqDto<FruitReqDto>): Fruit {
+        val savedFruit = fruitRepository.findByIdOrNull(id = fruitUpdateReqDto.id)
+            ?: throw NotFoundException("fruit id ${fruitUpdateReqDto.id} is not found")
 
-        savedFruit.origin = fruitUpdateDto.data.origin
-        savedFruit.name = fruitUpdateDto.data.name
+        duplicateCheckService.checkForDuplicate(
+            entityClass = Fruit::class,
+            fieldName = Fruit::name.name,
+            fieldValue = fruitUpdateReqDto.data.name,
+            idValue = fruitUpdateReqDto.id,
+            useSoftDelete = true
+        )
+
+        savedFruit.origin = fruitUpdateReqDto.data.origin
+        savedFruit.name = fruitUpdateReqDto.data.name
 
         return savedFruit
     }
 
     @Transactional(rollbackFor = [Exception::class])
-    fun updateFruits(fruitUpdateDtos: List<UpdateDto<FruitReqDto>>): List<Fruit> {
-        val fruitReqDtoMap = fruitUpdateDtos.associate { it.id to it.data }
+    fun updateFruits(fruitUpdateReqDtos: List<UpdateReqDto<FruitReqDto>>): List<Fruit> {
+        val fruitReqDtoMap = fruitUpdateReqDtos.associate { it.id to it.data }
         val savedFruits = fruitRepository.findByIdIn(ids = fruitReqDtoMap.keys.toList())
         for (savedFruit in savedFruits) {
             val fruitReqDto = fruitReqDtoMap[savedFruit.id] ?: throw Exception("not found fruit ${savedFruit.id}")
